@@ -20,9 +20,8 @@ const generateAccessAndRefreshToken = async( userId ) => {
 }
 
 const registerUser = asyncHandler( async ( req,res ) => {
-    console.log("--->")
+  
      const { firstName, lastName, email, password} = req.body
-
      if (
         [firstName, email, lastName, password].some((field) => field?.trim() === "")
     ) {
@@ -57,7 +56,6 @@ const registerUser = asyncHandler( async ( req,res ) => {
 
 const adminRegister =  asyncHandler( async ( req, res ) => {
     const { firstName, lastName, email, password} = req.body
-
      if (
         [firstName, email, lastName, password].some((field) => field?.trim() === "")
     ) {

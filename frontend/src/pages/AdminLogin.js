@@ -3,23 +3,33 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../components/AdminLogin.css';
 
-
 const AdminLogin = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError(''); 
+        setSuccess(''); 
+        
         try {
             const response = await axios.post('http://localhost:5050/api/v1/users/adminLogin', { email, password });
-            console.log("response",response)
-            // Assuming you get a token or some sort of success response
+            console.log("Login successful:", response);
             localStorage.setItem('token', response.data.token);
-            navigate('/admin-dashboard'); // Redirect to admin dashboard
+            setSuccess('Login successful!');
+            navigate('/admin-dashboard'); 
         } catch (err) {
-            setError(err.response.data.message || 'Login failed');
+            if (err.response) {
+                setError(err.response.data.message || 'Login failed');
+            } else if (err.request) {
+                setError('No response from server. Please check the server and try again.');
+            } else {
+                setError('Error: ' + err.message);
+            }
+            console.error("Login error:", err); 
         }
     };
 
@@ -46,6 +56,7 @@ const AdminLogin = () => {
                     />
                 </div>
                 {error && <p className="error">{error}</p>}
+                {success && <p className="success">{success}</p>}
                 <button type="submit">Login</button>
             </form>
         </div>
